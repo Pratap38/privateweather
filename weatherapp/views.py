@@ -9,11 +9,11 @@ def home(request):
     else:
         city = 'gwalior'
 
-    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=f6bb2b793a86f304f1a455849a32c622'
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=enter app api'
     PARAMS = {'units': 'metric'}
 
-    API_KEY = 'AIzaSyDQbdtSWqvWgR0lwINInRGeo_0BQT8DEZM'
-    SEARCH_ENGINE_ID = 'e51c95ae4ea3e4e84'
+    API_KEY = 'enter your api'
+    SEARCH_ENGINE_ID = 'enter your search engine'
 
     query = city + " 1920x1080"
     page = 1

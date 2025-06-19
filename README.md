@@ -49,7 +49,8 @@
 ## 📷 Screenshots
 
 **Homepage with Weather Data:**
-*(Include a screenshot of the app showing weather data for a city)*
+![Uploading Screenshot from 2025-06-19 18-03-58.png…]()
+
 
 
 ---

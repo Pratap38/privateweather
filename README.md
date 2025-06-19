@@ -49,7 +49,8 @@
 ## 📷 Screenshots
 
 **Homepage with Weather Data:**
-![Screenshot from 2025-06-19 18-03-58](https://github.com/user-attachments/assets/fe84fe8b-00bd-45a7-9556-7f01901893aa)
+![screenshot](https://github.com/user-attachments/assets/a3899462-71aa-4b17-8df8-fdea932b9f0b)
+
 
 
 

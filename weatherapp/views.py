@@ -5,64 +5,53 @@ import datetime
 
 
 def home(request):
-    # Default city if none is provided
-    city = request.POST.get('city', 'gwalior')
+   
+    if 'city' in request.POST:
+         city = request.POST['city']
+    else:
+         city = 'gwalior'     
+    
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid=f6bb2b793a86f304f1a455849a32c622'
+    PARAMS = {'units':'metric'}
 
-    # OpenWeather API URL
-    weather_url = f'https://api.openweathermap.org/data/2.5/weather'
-    weather_params = {'q': city, 'appid': 'f6bb2b793a86f304f1a455849a32c622', 'units': 'metric'}
+    API_KEY =  'AIzaSyDQbdtSWqvWgR0lwINInRGeo_0BQT8DEZM'
 
-    # Google Custom Search API URL
-    API_KEY = 'AIzaSyDQbdtSWqvWgR0lwINInRGeo_0BQT8DEZM'
     SEARCH_ENGINE_ID = 'e51c95ae4ea3e4e84'
-    search_query = f"{city} 1920x1080"
-    search_params = {
-        'key': API_KEY,
-        'cx': SEARCH_ENGINE_ID,
-        'q': search_query,
-        'searchType': 'image',
-        'imgSize': 'xlarge',
-        'start': 1,
-    }
-    search_url = "https://www.googleapis.com/customsearch/v1"
+     
+    query = city + " 1920x1080"
+    page = 1
+    start = (page - 1) * 10 + 1
+    searchType = 'image'
+    city_url = f"https://www.googleapis.com/customsearch/v1?key={API_KEY}&cx={SEARCH_ENGINE_ID}&q={query}&start={start}&searchType={searchType}&imgSize=xlarge"
+
+    data = requests.get(city_url).json()
+    count = 1
+    search_items = data.get("items")
+    image_url = search_items[1]['link']
+    
 
     try:
-        # Fetch weather data
-        weather_response = requests.get(weather_url, params=weather_params).json()
-        description = weather_response['weather'][0]['description']
-        icon = weather_response['weather'][0]['icon']
-        temp = weather_response['main']['temp']
-        day = datetime.date.today()
+          
+          data = requests.get(url,params=PARAMS).json()
+          description = data['weather'][0]['description']
+          icon = data['weather'][0]['icon']
+          temp = data['main']['temp']
+          day = datetime.date.today()
 
-        # Fetch image data
-        image_response = requests.get(search_url, params=search_params).json()
-        search_items = image_response.get("items")
-        image_url = search_items[1]['link'] if search_items and len(search_items) > 1 else None
+          return render(request,'weatherapp/index.html' , {'description':description , 'icon':icon ,'temp':temp , 'day':day , 'city':city , 'exception_occurred':False ,'image_url':image_url})
+    
+    except KeyError:
+          exception_occurred = True
+          messages.error(request,'Entered data is not available to API')   
+          city = 'gwalior'
+          data = requests.get(url,params=PARAMS).json()
+          
+          description = data['weather'][0]['description']
+          icon = data['weather'][0]['icon']
+          temp = data['main']['temp']
+          day = datetime.date.today()
 
-        # Fallback image if no image is found
-        if not image_url:
-            image_url = "https://via.placeholder.com/1920x1080?text=No+Image+Available"
-
-        return render(request, 'weatherapp/index.html', {
-            'description': description,
-            'icon': icon,
-            'temp': temp,
-            'day': day,
-            'city': city,
-            'exception_occurred': False,
-            'image_url': image_url,
-        })
-
-    except KeyError as e:
-        # Handle API response issues
-        messages.error(request, 'Error fetching data. Showing default values.')
-        fallback_city = 'gwalior'
-        return render(request, 'weatherapp/index.html', {
-            'description': 'clear sky',
-            'icon': '01d',
-            'temp': 25,
-            'day': datetime.date.today(),
-            'city': fallback_city,
-            'exception_occurred': True,
-            'image_url': "https://via.placeholder.com/1920x1080?text=Fallback+City",
-        })
+          return render(request,'weatherapp/index.html' ,{'description':'clear sky', 'icon':'01d'  ,'temp':25 , 'day':day , 'city':'indore' , 'exception_occurred':exception_occurred } )
+               
+    
+     
